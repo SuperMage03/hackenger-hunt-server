@@ -36,15 +36,35 @@ router.post('/', (req, res, next) => {
 
     switch (progressVal) {
         case 1:
-            correctAnswer = "a";
+            correctAnswer = "Trojan Horse";
             break;
 
         case 2:
-            correctAnswer = "ab";
+            correctAnswer = "CCC";
             break;
 
         case 3:
-            correctAnswer = "abc";
+            correctAnswer = "SohCahToa...?";
+            break;
+
+        case 4:
+            correctAnswer = "ihopeyouveheardofspl";
+            break;
+
+        case 5:
+            correctAnswer = "lemmeintowaterloo";
+            break;
+
+        case 6:
+            correctAnswer = "21";
+            break;
+
+        case 7:
+            correctAnswer = "rebellion";
+            break;
+
+        case 8:
+            correctAnswer = "JOHNNYDEPP";
             break;
     }
 
