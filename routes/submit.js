@@ -1,12 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 const cryptoJS = require('crypto-js');
-
-const base64Encode = (file) => {
-    const bitmap = fs.readFileSync(file);
-    return bitmap.toString("base64");
-};
 
 const tokenPassphrase = "Goose4Life";
 
@@ -14,6 +8,7 @@ const getEncryptedToken = (progressVal) => {
     const encryptedToken = cryptoJS.AES.encrypt(progressVal.toString(), tokenPassphrase);
     return encryptedToken.toString();
 };
+
 
 router.use('/', (req, res, next) => {
     const progressToken = req.body.progressToken;
@@ -26,38 +21,45 @@ router.use('/', (req, res, next) => {
         req.progressVal = parseInt(decryptedByte.toString(cryptoJS.enc.Utf8));
     }
 
+    req.answer = req.body.answer;
     next();
 });
 
 
 router.post('/', (req, res, next) => {
-    const imagePath = "public/images/overwatch2.jpg";
     const progressVal = req.progressVal;
+
+    const answer = req.answer;
+    let correctAnswer = "";
+
+    console.log(`${answer}  ${progressVal}`)
 
     switch (progressVal) {
         case 1:
-            res.send({
-                question: "Question 1",
-                description: "asdasd",
-                images: [base64Encode(imagePath)],
-            });
+            correctAnswer = "a";
             break;
 
         case 2:
-            res.send({
-                question: "Question 2",
-                description: "asdasd",
-                images: [base64Encode(imagePath)],
-            });
+            correctAnswer = "ab";
             break;
 
         case 3:
-            res.send({
-                question: "Question 3",
-                description: "asdasd",
-                images: [base64Encode(imagePath)],
-            });
+            correctAnswer = "abc";
             break;
+    }
+
+    if (answer.toLowerCase() === correctAnswer.toLowerCase()) {
+        res.send({
+            correct: true,
+            nextToken: getEncryptedToken(progressVal + 1),
+        });
+    }
+
+    else {
+        res.send({
+            correct: false,
+            nextToken: req.body.progressToken,
+        });
     }
 });
 
